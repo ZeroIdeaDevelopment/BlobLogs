@@ -23,6 +23,7 @@ module.exports = (bot, loggr) => {
                 type: 'cancel',
                 emoji: '✅',
                 async response(msg, args, userID) {
+                    if (msg.author.id !== userID) return await msg.channel.createMessage('No, you cannot.');
                     loggr.info('Updating blob icon forcefully...');
                     let m = await msg.channel.createMessage('Updating...');
                     try {
