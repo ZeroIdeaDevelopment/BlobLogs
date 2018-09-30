@@ -32,7 +32,8 @@ module.exports = (bot, loggr) => {
         fullDescription: 'Sets the blob avatar from the blobs folder. Owner-only.',
         requirements: {
             userIDs: [
-                '96269247411400704'
+                '96269247411400704',
+                '190544080164487168'
             ]
         },
         hidden: true,
