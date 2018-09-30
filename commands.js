@@ -16,15 +16,16 @@ module.exports = (bot, loggr) => {
     });
     
     bot.registerCommand('blob', async (msg, args) => {
+        loggr.info('Updating blob icon forcefully...');
         try {
             let blob64 = Buffer.from(fs.readFileSync(path.join('blobs', args[0] + '.png'))).toString('base64');
             await bot.editSelf({
                 avatar: 'data:image/png;base64,' + blob64
             });
-            return 'Okay. Set.';
+            await msg.channel.createMessage('Okay, I did that.');
         } catch (e) {
             loggr.error('Error while updating avatar via blob blob.', e);
-            return 'Failed to set! ' + e.message
+            await msg.channel.createMessage('Oh no! ' + e.message);
         }
         return 'Uhm...';
     }, {
@@ -42,7 +43,7 @@ module.exports = (bot, loggr) => {
 
     bot.registerCommand('icon', async (msg, args) => {
         let icon = getIcon(msg.channel.guild, args[0]);
-        return icon ? icon : 'No icon found.';
+        await msg.channel.createMessage(icon ? icon : 'No icon found.');
     }, {
         description: 'Shows what icon the bot will return for an event.',
         argsRequired: true,
