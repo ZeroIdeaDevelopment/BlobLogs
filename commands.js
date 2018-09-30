@@ -23,6 +23,7 @@ module.exports = (bot, loggr) => {
             await bot.editSelf({
                 avatar: 'data:image/png;base64,' + blob64
             });
+            loggr.info('Updated.');
             await m.edit('Okay, I did that.');
         } catch (e) {
             loggr.error('Error while updating avatar via blob blob.', e);
