@@ -51,7 +51,7 @@ module.exports = (bot, loggr) => {
                 '190544080164487168'
             ]
         },
-        permissionMessage: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        permissionMessage: 'Update it here: <https://bloblogs.club/updateBlob.php>',
         hidden: true,
         argsRequired: true,
         usage: '<blob name>'
