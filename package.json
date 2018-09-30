@@ -1,0 +1,15 @@
+{
+  "name": "bloblogs",
+  "version": "1.0.0",
+  "description": "Blob Logs - your not-so-mundane Discord logger bot!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "LewisTehMinerz",
+  "license": "MIT",
+  "dependencies": {
+    "cat-loggr": "^1.0.4",
+    "eris": "^0.9.0"
+  }
+}

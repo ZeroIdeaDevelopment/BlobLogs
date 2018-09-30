@@ -1,0 +1,51 @@
+const fs = require('fs');
+const path = require('path');
+
+module.exports = (bot, loggr) => {
+    let getIcon = require('./icons')(bot);
+
+    bot.registerCommand('ping', async (msg, args) => {
+        let start = msg.timestamp;
+        let m = await msg.channel.createMessage('Blobs are awesome!');
+        let end = m.timestamp;
+        await m.edit('Pong! Round-robin took ' + (end - start) + 'ms!');
+    }, {
+        aliases: ['pong'],
+        description: 'Ping! Are we online?',
+        fullDescription: 'A basic command just to check if the bot is online, and the latency between the bot and Discord, determined by getting the timestamp the command message was sent, creating a message, getting the timestamp of when the new one was sent, and then taking the old one from the new one (end - start).'
+    });
+    
+    bot.registerCommand('blob', async (msg, args) => {
+        try {
+            let blob64 = Buffer.from(fs.readFileSync(path.join('blobs', args[0] + '.png'))).toString('base64');
+            await bot.editSelf({
+                avatar: 'data:image/png;base64,' + blob64
+            });
+            return 'Okay. Set.';
+        } catch (e) {
+            loggr.error('Error while updating avatar via blob blob.', e);
+            return 'Failed to set! ' + e.message
+        }
+        return 'Uhm...';
+    }, {
+        description: 'Sets the avatar.',
+        fullDescription: 'Sets the blob avatar from the blobs folder. Owner-only.',
+        requirements: {
+            userIDs: [
+                '96269247411400704'
+            ]
+        },
+        hidden: true,
+        argsRequired: true,
+        usage: '<blob name>'
+    });
+
+    bot.registerCommand('icon', async (msg, args) => {
+        let icon = getIcon(msg.channel.guild, args[0]);
+        return icon ? icon : 'No icon found.';
+    }, {
+        description: 'Shows what icon the bot will return for an event.',
+        argsRequired: true,
+        usage: '<icon>'
+    });
+}
