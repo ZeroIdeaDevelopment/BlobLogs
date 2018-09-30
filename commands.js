@@ -15,7 +15,7 @@ module.exports = (bot, loggr) => {
         fullDescription: 'A basic command just to check if the bot is online, and the latency between the bot and Discord, determined by getting the timestamp the command message was sent, creating a message, getting the timestamp of when the new one was sent, and then taking the old one from the new one (end - start).'
     });
     
-    bot.registerCommand('blob', 'Are you sure? This screws up the playing message and can take a long time if it was ratelimited previously. If you have changed your mind, let the reactions time out.', {
+    bot.registerCommand('blob', 'Are you sure? This screws up the playing message and can take a long time if it was ratelimited previously.', {
         description: 'Sets the avatar.',
         fullDescription: 'Sets the blob avatar from the blobs folder. Owner-only.',
         reactionButtons: [
@@ -37,6 +37,11 @@ module.exports = (bot, loggr) => {
                         await m.edit('Oh no! ' + e.message);
                     }
                 }
+            },
+            {
+                type: 'cancel',
+                emoji: '❎',
+                response: 'Cancelled.'
             }
         ],
         reactionButtonTimeout: 15000,
