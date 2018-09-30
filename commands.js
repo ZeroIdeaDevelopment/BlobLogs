@@ -27,7 +27,6 @@ module.exports = (bot, loggr) => {
             loggr.error('Error while updating avatar via blob blob.', e);
             await msg.channel.createMessage('Oh no! ' + e.message);
         }
-        return 'Uhm...';
     }, {
         description: 'Sets the avatar.',
         fullDescription: 'Sets the blob avatar from the blobs folder. Owner-only.',
