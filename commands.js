@@ -23,19 +23,18 @@ module.exports = (bot, loggr) => {
                 type: 'cancel',
                 emoji: '✅',
                 async response(msg, args, userID) {
-                    if (msg.author.id !== userID) return await msg.channel.createMessage('No, you cannot.');
                     loggr.info('Updating blob icon forcefully...');
-                    let m = await msg.channel.createMessage('Updating...');
+                    await msg.edit('Updating...');
                     try {
                         let blob64 = Buffer.from(fs.readFileSync(path.join('blobs', args[0] + '.png'))).toString('base64');
                         await bot.editSelf({
                             avatar: 'data:image/png;base64,' + blob64
                         });
                         loggr.info('Updated.');
-                        await m.edit('Okay, I did that.');
+                        await msg.edit('Okay, I did that.');
                     } catch (e) {
                         loggr.error('Error while updating avatar via blob blob.', e);
-                        await m.edit('Oh no! ' + e.message);
+                        await msg.edit('Oh no! ' + e.message);
                     }
                 }
             },
@@ -52,6 +51,7 @@ module.exports = (bot, loggr) => {
                 '190544080164487168'
             ]
         },
+        permissionMessage: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         hidden: true,
         argsRequired: true,
         usage: '<blob name>'
