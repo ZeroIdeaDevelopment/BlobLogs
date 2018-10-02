@@ -2,6 +2,9 @@ const Eris = require('eris');
 const CatLoggr = require('cat-loggr');
 const fs = require('fs');
 const path = require('path');
+const Lynx = require('lynx');
+
+const metrics = new Lynx('localhost', 8125);
 
 const loggr = new CatLoggr();
 
@@ -31,6 +34,9 @@ bot.on('ready', async () => {
 
 require('./commands')(bot, loggr);
 loggr.info('Commands loaded.');
+
+require('./events')(bot, loggr, metrics);
+loggr.info('Events loaded.');
 
 loggr.init('Here we go!');
 bot.connect();
