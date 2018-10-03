@@ -86,4 +86,19 @@ module.exports = (bot, loggr, metrics) => {
     bot.on('voiceChannelSwitch', (member, newChannel, oldChannel) => {
         metrics.increment('events.voiceChannelSwitch');
     });
+
+    bot.on('guildCreate', () => {
+        metrics.increment('stats.guild_count');
+        metrics.set('stats.user_count', bot.users.size);
+    });
+
+    bot.on('guildDelete', () => {
+        metrics.decrement('stats.guild_count');
+        metrics.set('stats.user_count', bot.users.size);
+    });
+
+    bot.on('ready', () => {
+        metrics.set('stats.guild_count', bot.guilds.size);
+        metrics.set('stats.user_count', bot.users.size);
+    });
 };
