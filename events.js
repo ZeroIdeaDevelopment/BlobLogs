@@ -94,12 +94,12 @@ module.exports = (bot, loggr, metrics) => {
 
     bot.on('guildDelete', () => {
         metrics.decrement('stats.guild_count');
-        metrics.set('stats.user_count', bot.users.size);
+        metrics.gauge('stats.user_count', bot.users.size);
     });
 
     bot.on('ready', () => {
-        loggr.info(`events.js - Ready, ${bot.guilds.size} guilds and ${bot.users.size} pushed to metrics.`);
-        metrics.set('stats.guild_count', bot.guilds.size);
-        metrics.set('stats.user_count', bot.users.size);
+        loggr.info(`events.js - Ready, ${bot.guilds.size} guilds and ${bot.users.size} users pushed to metrics.`);
+        metrics.gauge('stats.guild_count', bot.guilds.size);
+        metrics.gauge('stats.user_count', bot.users.size);
     });
 };
