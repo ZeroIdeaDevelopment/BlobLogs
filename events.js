@@ -89,7 +89,7 @@ module.exports = (bot, loggr, metrics) => {
 
     bot.on('guildCreate', () => {
         metrics.increment('stats.guild_count');
-        metrics.set('stats.user_count', bot.users.size);
+        metrics.gauge('stats.user_count', bot.users.size);
     });
 
     bot.on('guildDelete', () => {
