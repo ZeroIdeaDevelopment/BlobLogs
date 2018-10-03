@@ -98,6 +98,7 @@ module.exports = (bot, loggr, metrics) => {
     });
 
     bot.on('ready', () => {
+        loggr.info(`events.js - Ready, ${bot.guilds.size} guilds and ${bot.users.size} pushed to metrics.`);
         metrics.set('stats.guild_count', bot.guilds.size);
         metrics.set('stats.user_count', bot.users.size);
     });
