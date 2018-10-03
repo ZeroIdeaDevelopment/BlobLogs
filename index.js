@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const Lynx = require('lynx');
 
-const metrics = new Lynx('localhost', 8125, { prefix: 'bloblogs' });
+const metrics = new Lynx('localhost', 8125);
 
 const loggr = new CatLoggr();
 
