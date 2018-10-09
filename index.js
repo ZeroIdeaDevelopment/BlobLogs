@@ -2,9 +2,6 @@ const Eris = require('eris');
 const CatLoggr = require('cat-loggr');
 const fs = require('fs');
 const path = require('path');
-const Lynx = require('lynx');
-
-const metrics = new Lynx('localhost', 8125);
 
 const loggr = new CatLoggr();
 
@@ -29,14 +26,11 @@ bot.on('ready', async () => {
         type: 3,
         name: 'logs | blob help | b1nzyblob2'
     });
-    loggr.info('Status updated');
+    loggr.info('Status updated.');
 });
 
 require('./commands')(bot, loggr);
 loggr.info('Commands loaded.');
-
-require('./events')(bot, loggr, metrics);
-loggr.info('Events loaded.');
 
 loggr.init('Here we go!');
 bot.connect();
