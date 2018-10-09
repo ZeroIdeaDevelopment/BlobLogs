@@ -75,6 +75,10 @@ module.exports = (bot, loggr) => {
         loggr.debug('Encountered messageReactionRemoveAll.');
     });
 
+    bot.on('messageUpdate', (message, oldMessage) => {
+        loggr.debug('Encountered messageUpdate.');
+    });
+
     bot.on('voiceChannelJoin', (member, newChannel) => {
         loggr.debug('Encountered voiceChannelJoin.');
     });
