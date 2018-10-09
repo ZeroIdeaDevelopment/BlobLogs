@@ -94,8 +94,4 @@ module.exports = (bot, loggr) => {
     bot.on('guildDelete', () => {
         loggr.debug('Encountered guildDelete.');
     });
-
-    bot.on('ready', () => {
-        loggr.info('Bot is ready!');
-    });
 };
