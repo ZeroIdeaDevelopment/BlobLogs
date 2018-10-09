@@ -15,7 +15,7 @@ module.exports = (bot, loggr) => {
         fullDescription: 'A basic command just to check if the bot is online, and the latency between the bot and Discord, determined by getting the timestamp the command message was sent, creating a message, getting the timestamp of when the new one was sent, and then taking the old one from the new one (end - start).'
     });
     
-    bot.registerCommand('blob', 'Are you sure? This screws up the playing message and can take a long time if it was ratelimited previously.', {
+    bot.registerCommand('blob', 'Are you sure? This can take a long time if it was ratelimited previously.', {
         description: 'Sets the avatar.',
         fullDescription: 'Sets the blob avatar from the blobs folder. Owner-only.',
         reactionButtons: [
@@ -29,6 +29,10 @@ module.exports = (bot, loggr) => {
                         let blob64 = Buffer.from(fs.readFileSync(path.join('blobs', args[0] + '.png'))).toString('base64');
                         await bot.editSelf({
                             avatar: 'data:image/png;base64,' + blob64
+                        });
+                        await bot.editStatus({
+                            type: 3,
+                            name: 'logs | blob help | ' + args[0]
                         });
                         loggr.info('Updated.');
                         await msg.edit('Okay, I did that.');
