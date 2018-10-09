@@ -32,6 +32,9 @@ bot.on('ready', async () => {
 require('./commands')(bot, loggr);
 loggr.info('Commands loaded.');
 
+require('./events')(bot, loggr);
+loggr.info('Events loaded.');
+
 loggr.init('Here we go!');
 bot.connect();
 
