@@ -133,7 +133,7 @@ module.exports = (bot, loggr, db) => {
         reactionButtonTimeout: 15000,
         requirements: {
             permissions: {
-                manageServer: true
+                manageGuild: true
             }
         }
     });
