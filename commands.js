@@ -130,7 +130,12 @@ module.exports = (bot, loggr, db) => {
                 response: 'Cancelled.'
             }
         ],
-        reactionButtonTimeout: 15000
+        reactionButtonTimeout: 15000,
+        requirements: {
+            permissions: {
+                manageServer: true
+            }
+        }
     });
 
     bot.registerCommand('icon', async (msg, args) => {
