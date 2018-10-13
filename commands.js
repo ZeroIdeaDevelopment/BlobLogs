@@ -135,7 +135,8 @@ module.exports = (bot, loggr, db) => {
             permissions: {
                 manageGuild: true
             }
-        }
+        },
+        permissionMessage: 'You do not have permissions to reset the settings!'
     });
 
     bot.registerCommand('icon', async (msg, args) => {
