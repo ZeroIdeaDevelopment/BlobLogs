@@ -1,4 +1,7 @@
-module.exports = (bot, loggr) => {
+const spoopy = require('spoopylink');
+const urlRegex = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/ig;
+
+module.exports = (bot, loggr, db) => {
     bot.on('channelCreate', chan => {
         loggr.debug('Encountered channelCreate.');
     });
@@ -51,8 +54,33 @@ module.exports = (bot, loggr) => {
         loggr.debug('Encountered guildUpdate.');
     });
 
-    bot.on('messageCreate', message => {
+    bot.on('messageCreate', async message => {
         loggr.debug('Encountered messageCreate.');
+        if (await db[`settings:${msg.channel.guild.id}`].events.unsafeLinks) {
+            let links = message.content.match(urlRegex);
+            if (links !== null) {
+                let linkCheckResults = await spoopy(links);
+                let dangerousLinks = [];
+                if (linkCheckResults.length !== undefined) {
+                    linkCheckResults.forEach(link => {
+                        if (!link.safe) {
+                            dangerousLinks.push({
+                                url: link.url,
+                                reasons: link.reasons
+                            });
+                        }
+                    });
+                } else {
+                    if (!linkCheckResults.safe) {
+                        dangerousLinks.push({
+                            url: linkCheckResults.url,
+                            reasons: linkCheckResults.reasons
+                        });
+                    }
+                }
+                if (dangerousLinks.length > 0) bot.emit('unsafeLinks', dangerousLinks);
+            }
+        }
     });
 
     bot.on('messageDelete', message => {
@@ -97,5 +125,9 @@ module.exports = (bot, loggr) => {
 
     bot.on('guildDelete', () => {
         loggr.debug('Encountered guildDelete.');
+    });
+
+    bot.on('unsafeLinks', dangerousLinks => {
+        
     });
 };

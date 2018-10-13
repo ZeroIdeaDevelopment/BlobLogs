@@ -2,14 +2,19 @@ const Eris = require('eris');
 const CatLoggr = require('cat-loggr');
 const fs = require('fs');
 const path = require('path');
+const config = require('./config');
+const Redite = require('redite');
 
 const loggr = new CatLoggr();
+const db = new Redite({
+    url: config.redisURL
+});
 
 loggr.info('Getting the blobs...');
 const blobs = fs.readdirSync('blobs');
 loggr.info('Blobs got!');
 
-const bot = new Eris.CommandClient(require('./token.json'), { maxShards: 'auto' }, { description: 'Your not-so-mundane logger bot!', owner: 'ZeroIdea Development', prefix: ['blob ', 'b!', '@mention '] });
+const bot = new Eris.CommandClient(config.token, { maxShards: 'auto' }, { description: 'Your not-so-mundane logger bot!', owner: 'ZeroIdea Development', prefix: ['blob ', 'b!', '@mention '] });
 
 bot.on('ready', async () => {
     loggr.info('Bot is ready!');
@@ -29,10 +34,10 @@ bot.on('ready', async () => {
     loggr.info('Status updated.');
 });
 
-require('./commands')(bot, loggr);
+require('./commands')(bot, loggr, db);
 loggr.info('Commands loaded.');
 
-require('./events')(bot, loggr);
+require('./events')(bot, loggr, db);
 loggr.info('Events loaded.');
 
 loggr.init('Here we go!');
