@@ -56,7 +56,7 @@ module.exports = (bot, loggr, db) => {
 
     bot.on('messageCreate', async message => {
         loggr.debug('Encountered messageCreate.');
-        if (await db[`settings:${msg.channel.guild.id}`].events.unsafeLinks) {
+        if (await db[`settings:${message.channel.guild.id}`].events.unsafeLinks) {
             let links = message.content.match(urlRegex);
             if (links !== null) {
                 let linkCheckResults = await spoopy(links);
@@ -128,6 +128,6 @@ module.exports = (bot, loggr, db) => {
     });
 
     bot.on('unsafeLinks', dangerousLinks => {
-        
+
     });
 };
