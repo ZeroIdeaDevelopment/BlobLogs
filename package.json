@@ -11,13 +11,9 @@
   "dependencies": {
     "cat-loggr": "^1.0.4",
     "eris": "^0.9.0",
-<<<<<<< Updated upstream
-    "lynx": "^0.2.0",
+    "eris-additions": "^1.2.5",
     "node-fetch": "^2.2.0",
     "redite": "^3.0.0",
     "spoopylink": "^1.0.4"
-=======
-    "eris-additions": "^1.2.5"
->>>>>>> Stashed changes
   }
 }
