@@ -29,7 +29,7 @@ bot.on('ready', async () => {
     }
     await bot.editStatus({
         type: 3,
-        name: 'logs | blob help | b1nzyblob2'
+        name: 'logs | blob help | https://bloblogs.club | b1nzyblob2'
     });
     loggr.info('Status updated.');
 });
