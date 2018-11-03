@@ -14,7 +14,7 @@ loggr.info('Getting the blobs...');
 const blobs = fs.readdirSync('blobs');
 loggr.info('Blobs got!');
 
-const bot = new Eris.CommandClient(config.token, { maxShards: 'auto' }, { description: 'Your not-so-mundane logger bot!', owner: 'ZeroIdea Development', prefix: ['blob ', 'b!', '@mention '] });
+const bot = new Eris.CommandClient(config.token, { maxShards: 'auto' }, { description: 'Your not-so-mundane logger bot!\nWebsite: https://bloblogs.club/', owner: 'ZeroIdea Development', prefix: ['blob ', 'b!', '@mention '] });
 
 bot.on('ready', async () => {
     loggr.info('Bot is ready!');
@@ -52,7 +52,7 @@ setInterval(async () => {
         });
         await bot.editStatus({
             type: 3,
-            name: 'logs | blob help | ' + blob.substring(0, blob.length - 4)
+            name: 'logs | blob help | https://bloblogs.club | ' + blob.substring(0, blob.length - 4)
         });
         loggr.info('Avatar changed. New avatar is ' + blob.substring(0, blob.length - 4));
     } catch (e) {
