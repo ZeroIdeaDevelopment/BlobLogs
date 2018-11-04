@@ -3,3 +3,6 @@ blobs/
 # literally the equivalent of uploading node_modules, so lets not 
 # also to help stop people from self-hosting it :) 
 config.json
+# nope, you aint getting my web files
+# also to help stop people from self-hosting
+web/

@@ -56,29 +56,33 @@ module.exports = (bot, loggr, db) => {
 
     bot.on('messageCreate', async message => {
         loggr.debug('Encountered messageCreate.');
-        if (await db[`settings:${message.channel.guild.id}`].events.unsafeLinks) {
-            let links = message.content.match(urlRegex);
-            if (links !== null) {
-                let linkCheckResults = await spoopy(links);
-                let dangerousLinks = [];
-                if (linkCheckResults.length !== undefined) {
-                    linkCheckResults.forEach(link => {
-                        if (!link.safe) {
+        let settingsCollection = db.collection('settings');
+        let guildSettings = await settingsCollection.findOne({ guildId: message.channel.guild.id });
+        if (guildSettings) {
+            if (guildSettings.events.unsafeLinks) {
+                let links = message.content.match(urlRegex);
+                if (links !== null) {
+                    let linkCheckResults = await spoopy(links);
+                    let dangerousLinks = [];
+                    if (linkCheckResults.length !== undefined) {
+                        linkCheckResults.forEach(link => {
+                            if (!link.safe) {
+                                dangerousLinks.push({
+                                    url: link.url,
+                                    reasons: link.reasons
+                                });
+                            }
+                        });
+                    } else {
+                        if (!linkCheckResults.safe) {
                             dangerousLinks.push({
-                                url: link.url,
-                                reasons: link.reasons
+                                url: linkCheckResults.url,
+                                reasons: linkCheckResults.reasons
                             });
                         }
-                    });
-                } else {
-                    if (!linkCheckResults.safe) {
-                        dangerousLinks.push({
-                            url: linkCheckResults.url,
-                            reasons: linkCheckResults.reasons
-                        });
                     }
+                    if (dangerousLinks.length > 0) bot.emit('unsafeLinks', dangerousLinks);
                 }
-                if (dangerousLinks.length > 0) bot.emit('unsafeLinks', dangerousLinks);
             }
         }
     });
@@ -119,8 +123,110 @@ module.exports = (bot, loggr, db) => {
         loggr.debug('Encountered voiceChannelSwitch.');
     });
 
-    bot.on('guildCreate', () => {
+    bot.on('guildCreate', async guild => {
         loggr.debug('Encountered guildCreate.');
+        let settingsCollection = db.collection('settings');
+        let guildExists = await settingsCollection.findOne({ guildId: guild.id });
+        if (!guildExists) {
+            await settingsCollection.insertOne({
+                guildId: guild.id,
+                events: {
+                    channelCreate: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} created channel {channel->name}.'
+                    },
+                    channelDelete: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} deleted channel {channel->name}.' 
+                    },
+                    channelUpdate: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} updated channel {channel->name}.\n{channel->changes}'
+                    },
+                    guildBanAdd: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} banned {member->name}.\nReason: {reason}'
+                    },
+                    guildBanRemove: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} unbanned {member->name}.\nReason: {reason}'
+                    },
+                    guildEmojisUpdate: {
+                        enabled: false,
+                        format: '{time} | {icon} The emojis were updated.\n{emojis->changes}'
+                    },
+                    guildMemberAdd: {
+                        enabled: false,
+                        format: '{time} | {icon} {member->name} joined.'
+                    },
+                    guildMemberRemove: {
+                        enabled: false,
+                        format: '{time} | {icon} {member->name} left.'
+                    },
+                    guildMemberUpdate: {
+                        enabled: false,
+                        format: '{time} | {icon} {member->name} has been edited.\n{member->changes}'
+                    },
+                    guildRoleCreate: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} created role {role->name}.'
+                    },
+                    guildRoleDelete: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} deleted role {role->name}.'
+                    },
+                    guildRoleUpdate: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} updated role {role->name}.\n{changes}'
+                    },
+                    guildUpdate: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} updated the guild.\n{changes}'
+                    },
+                    messageDelete: {
+                        enabled: false,
+                        format: '{time} | {icon} A message was deleted.\n**Author:** {message->author}\n**Content:** {message->content}'
+                    },
+                    messageDeleteBulk: {
+                        enabled: false,
+                        format: '{time} | {icon} Multiple messages were deleted by {moderator->name}.'
+                    },
+                    messageReactionAdd: {
+                        enabled: false,
+                        format: '{time} | {icon} {target->name} added a reaction to a message.\n**Reaction:** {reaction}'
+                    },
+                    messageReactionRemove: {
+                        enabled: false,
+                        format: '{time} | {icon} {target->name} removed a reaction from a message.\n**Reaction:** {reaction}'
+                    },
+                    messageReactionRemoveAll: {
+                        enabled: false,
+                        format: '{time} | {icon} {moderator->name} removed all reactions from a message.'
+                    },
+                    messageUpdate: {
+                        enabled: false,
+                        format: '{time} | {icon} {member->name} edited their message.\n**Old Content:** {message->oldContent}\n**New Content:** {message->newContent}'
+                    },
+                    voiceChannelJoin: {
+                        enabled: false,
+                        format: '{time} | {icon} {member->name} joined {channel->name}.'
+                    },
+                    voiceChannelLeave: {
+                        enabled: false,
+                        format: '{time} | {icon} {member->name} left {channel->name}.'
+                    },
+                    voiceChannelSwitch: {
+                        enabled: false,
+                        format: '{time} | {icon} {member->name} switched from {oldChannel->name} to {channel->name}.'
+                    },
+                    unsafeLinks: {
+                        enabled: false,
+                        format: '{time} | {icon} {member->name} posted one or more unsafe links in their message.\n**Links:** {message->unsafeLinks}'
+                    }
+                }
+            });
+            loggr.info('Added guild to database: ' + guild.id);
+        }
     });
 
     bot.on('guildDelete', () => {
@@ -128,6 +234,6 @@ module.exports = (bot, loggr, db) => {
     });
 
     bot.on('unsafeLinks', dangerousLinks => {
-
+        loggr.debug('Encountered unsafeLinks.');
     });
 };

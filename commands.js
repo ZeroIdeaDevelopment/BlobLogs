@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = (bot, loggr, db) => {
     let getIcon = require('./icons')(bot);
-
+    
     bot.registerCommand('ping', async (msg, args) => {
         let start = msg.timestamp;
         let m = await msg.channel.createMessage('Blobs are awesome!');
@@ -60,7 +60,7 @@ module.exports = (bot, loggr, db) => {
         argsRequired: true,
         usage: '<blob name>'
     });
-
+    
     bot.registerCommand('reset', 'Are you sure you want to reset all your settings? This cannot be undone!', {
         description: 'Resets your settings.',
         fullDescription: 'Resets your settings by setting the data back to the defaults.',
@@ -71,55 +71,105 @@ module.exports = (bot, loggr, db) => {
                 async response(msg, args, userID) {
                     loggr.info('Resetting settings for ' + msg.channel.guild.id + '...');
                     await msg.edit('Resetting...');
-                    await db[`settings:${msg.channel.guild.id}`].events.set({
-                        channelCreate: false,
-                        channelDelete: false,
-                        channelUpdate: false,
-                        guildBanAdd: false,
-                        guildBanRemove: false,
-                        guildEmojisUpdate: false,
-                        guildMemberAdd: false,
-                        guildMemberRemove: false,
-                        guildMemberUpdate: false,
-                        guildRoleCreate: false,
-                        guildRoleDelete: false,
-                        guildRoleUpdate: false,
-                        guildUpdate: false,
-                        messageDelete: false,
-                        messageDeleteBulk: false,
-                        messageReactionAdd: false,
-                        messageReactionRemove: false,
-                        messageReactionRemoveAll: false,
-                        messageUpdate: false,
-                        voiceChannelJoin: false,
-                        voiceChannelLeave: false,
-                        voiceChannelSwitch: false,
-                        unsafeLinks: false
-                    });
-                    await db[`settings:${msg.channel.guild.id}`].loggingFormats.set({
-                        channelCreate: '{time} | {icon} {moderator->name} created channel {channel->name}.',
-                        channelDelete: '{time} | {icon} {moderator->name} deleted channel {channel->name}.',
-                        channelUpdate: '{time} | {icon} {moderator->name} updated channel {channel->name}.\n{channel->changes}',
-                        guildBanAdd: '{time} | {icon} {moderator->name} banned {member->name}.\nReason: {reason}',
-                        guildBanRemove: '{time} | {icon} {moderator->name} unbanned {member->name}.\nReason: {reason}',
-                        guildEmojisUpdate: '{time} | {icon} The emojis were updated.\n{emojis->changes}',
-                        guildMemberAdd: '{time} | {icon} {member->name} joined.',
-                        guildMemberRemove: '{time} | {icon} {member->name} left.',
-                        guildMemberUpdate: '{time} | {icon} {member->name} has been edited.\n{member->changes}',
-                        guildRoleCreate: '{time} | {icon} {moderator->name} created role {role->name}.',
-                        guildRoleDelete: '{time} | {icon} {moderator->name} deleted role {role->name}.',
-                        guildRoleUpdate: '{time} | {icon} {moderator->name} updated role {role->name}.\n{changes}',
-                        guildUpdate: '{time} | {icon} {moderator->name} updated the guild.\n{changes}',
-                        messageDelete: '{time} | {icon} A message was deleted.\n**Author:** {message->author}\n**Content:** {message->content}',
-                        messageDeleteBulk: '{time} | {icon} Multiple messages were deleted by {moderator->name}.',
-                        messageReactionAdd: '{time} | {icon} {target->name} added a reaction to a message.\n**Reaction:** {reaction}',
-                        messageReactionRemove: '{time} | {icon} {target->name} removed a reaction from a message.\n**Reaction:** {reaction}',
-                        messageReactionRemoveAll: '{time} | {icon} {moderator->name} removed all reactions from a message.',
-                        messageUpdate: '{time} | {icon} {member->name} edited their message.\n**Old Content:** {message->oldContent}\n**New Content:** {message->newContent}',
-                        voiceChannelJoin: '{time} | {icon} {member->name} joined {channel->name}.',
-                        voiceChannelLeave: '{time} | {icon} {member->name} left {channel->name}.',
-                        voiceChannelSwitch: '{time} | {icon} {member->name} switched from {oldChannel->name} to {channel->name}.',
-                        unsafeLinks: '{time} | {icon} {member->name} posted one or more unsafe links in their message.\n**Links:** {message->unsafeLinks}'
+                    let settingsCollection = db.collection('settings');
+                    let guild = await settingsCollection.findOne({ guildId: msg.channel.guild.id });
+                    await settingsCollection.updateOne(guild, {
+                        $set: {
+                            events: {
+                                channelCreate: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} created channel {channel->name}.'
+                                },
+                                channelDelete: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} deleted channel {channel->name}.'
+                                },
+                                channelUpdate: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} updated channel {channel->name}.\n{channel->changes}'
+                                },
+                                guildBanAdd: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} banned {member->name}.\nReason: {reason}'
+                                },
+                                guildBanRemove: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} unbanned {member->name}.\nReason: {reason}'
+                                },
+                                guildEmojisUpdate: {
+                                    enabled: false,
+                                    format: '{time} | {icon} The emojis were updated.\n{emojis->changes}'
+                                },
+                                guildMemberAdd: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {member->name} joined.'
+                                },
+                                guildMemberRemove: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {member->name} left.'
+                                },
+                                guildMemberUpdate: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {member->name} has been edited.\n{member->changes}'
+                                },
+                                guildRoleCreate: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} created role {role->name}.'
+                                },
+                                guildRoleDelete: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} deleted role {role->name}.'
+                                },
+                                guildRoleUpdate: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} updated role {role->name}.\n{changes}'
+                                },
+                                guildUpdate: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} updated the guild.\n{changes}'
+                                },
+                                messageDelete: {
+                                    enabled: false,
+                                    format: '{time} | {icon} A message was deleted.\n**Author:** {message->author}\n**Content:** {message->content}'
+                                },
+                                messageDeleteBulk: {
+                                    enabled: false,
+                                    format: '{time} | {icon} Multiple messages were deleted by {moderator->name}.'
+                                },
+                                messageReactionAdd: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {target->name} added a reaction to a message.\n**Reaction:** {reaction}'
+                                },
+                                messageReactionRemove: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {target->name} removed a reaction from a message.\n**Reaction:** {reaction}'
+                                },
+                                messageReactionRemoveAll: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {moderator->name} removed all reactions from a message.'
+                                },
+                                messageUpdate: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {member->name} edited their message.\n**Old Content:** {message->oldContent}\n**New Content:** {message->newContent}'
+                                },
+                                voiceChannelJoin: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {member->name} joined {channel->name}.'
+                                },
+                                voiceChannelLeave: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {member->name} left {channel->name}.'
+                                },
+                                voiceChannelSwitch: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {member->name} switched from {oldChannel->name} to {channel->name}.'
+                                },
+                                unsafeLinks: {
+                                    enabled: false,
+                                    format: '{time} | {icon} {member->name} posted one or more unsafe links in their message.\n**Links:** {message->unsafeLinks}'
+                                }
+                            }
+                        }
                     });
                     await msg.edit('Complete.');
                 }
@@ -138,7 +188,7 @@ module.exports = (bot, loggr, db) => {
         },
         permissionMessage: 'You do not have permissions to reset the settings!'
     });
-
+    
     bot.registerCommand('icon', async (msg, args) => {
         let icon = getIcon(msg.channel.guild, args[0]);
         await msg.channel.createMessage(icon ? icon : 'No icon found.');
