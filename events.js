@@ -133,95 +133,95 @@ module.exports = (bot, loggr, db) => {
                 events: {
                     channelCreate: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} created channel {channel->name}.'
+                        format: '{time} | {icon} {moderator.name} created channel {channel.name}.'
                     },
                     channelDelete: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} deleted channel {channel->name}.' 
+                        format: '{time} | {icon} {moderator.name} deleted channel {channel.name}.' 
                     },
                     channelUpdate: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} updated channel {channel->name}.\n{channel->changes}'
+                        format: '{time} | {icon} {moderator.name} updated channel {channel.name}.\n{channel.changes}'
                     },
                     guildBanAdd: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} banned {member->name}.\nReason: {reason}'
+                        format: '{time} | {icon} {moderator.name} banned {member.name}.\nReason: {reason}'
                     },
                     guildBanRemove: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} unbanned {member->name}.\nReason: {reason}'
+                        format: '{time} | {icon} {moderator.name} unbanned {member.name}.\nReason: {reason}'
                     },
                     guildEmojisUpdate: {
                         enabled: false,
-                        format: '{time} | {icon} The emojis were updated.\n{emojis->changes}'
+                        format: '{time} | {icon} The emojis were updated.\n{emojis.changes}'
                     },
                     guildMemberAdd: {
                         enabled: false,
-                        format: '{time} | {icon} {member->name} joined.'
+                        format: '{time} | {icon} {member.name} joined.'
                     },
                     guildMemberRemove: {
                         enabled: false,
-                        format: '{time} | {icon} {member->name} left.'
+                        format: '{time} | {icon} {member.name} left.'
                     },
                     guildMemberUpdate: {
                         enabled: false,
-                        format: '{time} | {icon} {member->name} has been edited.\n{member->changes}'
+                        format: '{time} | {icon} {member.name} has been edited.\n{member.changes}'
                     },
                     guildRoleCreate: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} created role {role->name}.'
+                        format: '{time} | {icon} {moderator.name} created role {role.name}.'
                     },
                     guildRoleDelete: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} deleted role {role->name}.'
+                        format: '{time} | {icon} {moderator.name} deleted role {role.name}.'
                     },
                     guildRoleUpdate: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} updated role {role->name}.\n{changes}'
+                        format: '{time} | {icon} {moderator.name} updated role {role.name}.\n{changes}'
                     },
                     guildUpdate: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} updated the guild.\n{changes}'
+                        format: '{time} | {icon} {moderator.name} updated the guild.\n{changes}'
                     },
                     messageDelete: {
                         enabled: false,
-                        format: '{time} | {icon} A message was deleted.\n**Author:** {message->author}\n**Content:** {message->content}'
+                        format: '{time} | {icon} A message was deleted.\n**Author:** {message.author}\n**Content:** {message.content}'
                     },
                     messageDeleteBulk: {
                         enabled: false,
-                        format: '{time} | {icon} Multiple messages were deleted by {moderator->name}.'
+                        format: '{time} | {icon} Multiple messages were deleted by {moderator.name}.'
                     },
                     messageReactionAdd: {
                         enabled: false,
-                        format: '{time} | {icon} {target->name} added a reaction to a message.\n**Reaction:** {reaction}'
+                        format: '{time} | {icon} {target.name} added a reaction to a message.\n**Reaction:** {reaction}'
                     },
                     messageReactionRemove: {
                         enabled: false,
-                        format: '{time} | {icon} {target->name} removed a reaction from a message.\n**Reaction:** {reaction}'
+                        format: '{time} | {icon} {target.name} removed a reaction from a message.\n**Reaction:** {reaction}'
                     },
                     messageReactionRemoveAll: {
                         enabled: false,
-                        format: '{time} | {icon} {moderator->name} removed all reactions from a message.'
+                        format: '{time} | {icon} {moderator.name} removed all reactions from a message.'
                     },
                     messageUpdate: {
                         enabled: false,
-                        format: '{time} | {icon} {member->name} edited their message.\n**Old Content:** {message->oldContent}\n**New Content:** {message->newContent}'
+                        format: '{time} | {icon} {member.name} edited their message.\n**Old Content:** {message.oldContent}\n**New Content:** {message.newContent}'
                     },
                     voiceChannelJoin: {
                         enabled: false,
-                        format: '{time} | {icon} {member->name} joined {channel->name}.'
+                        format: '{time} | {icon} {member.name} joined {channel.name}.'
                     },
                     voiceChannelLeave: {
                         enabled: false,
-                        format: '{time} | {icon} {member->name} left {channel->name}.'
+                        format: '{time} | {icon} {member.name} left {channel.name}.'
                     },
                     voiceChannelSwitch: {
                         enabled: false,
-                        format: '{time} | {icon} {member->name} switched from {oldChannel->name} to {channel->name}.'
+                        format: '{time} | {icon} {member.name} switched from {oldChannel.name} to {channel.name}.'
                     },
                     unsafeLinks: {
                         enabled: false,
-                        format: '{time} | {icon} {member->name} posted one or more unsafe links in their message.\n**Links:** {message->unsafeLinks}'
+                        format: '{time} | {icon} {member.name} posted one or more unsafe links in their message.\n**Links:** {message.unsafeLinks}'
                     }
                 }
             });
