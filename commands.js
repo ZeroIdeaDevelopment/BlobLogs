@@ -69,13 +69,7 @@ module.exports = (bot, loggr, db) => {
                 type: 'cancel',
                 emoji: '✅',
                 async response(msg, args, userID) {
-                    loggr.info('Resetting settings for ' + msg.channel.guild.id + '...');
-                    await msg.edit('Resetting...');
-                    let settingsCollection = db.collection('settings');
-                    let guild = await settingsCollection.findOne({ guildId: msg.channel.guild.id });
-                    await settingsCollection.updateOne(guild, {
-                        $set: {
-                            events: {
+                    let baseData = {
                                 channelCreate: {
                                     enabled: false,
                                     format: '{time} | {icon} {moderator->name} created channel {channel->name}.'
@@ -168,9 +162,20 @@ module.exports = (bot, loggr, db) => {
                                     enabled: false,
                                     format: '{time} | {icon} {member->name} posted one or more unsafe links in their message.\n**Links:** {message->unsafeLinks}'
                                 }
+                            };
+                    loggr.info('Resetting settings for ' + msg.channel.guild.id + '...');
+                    await msg.edit('Resetting...');
+                    let settingsCollection = db.collection('settings');
+                    let guild = await settingsCollection.findOne({ guildId: msg.channel.guild.id });
+                    if (!guild) {
+                        await settingsCollection.insertOne({ guildId: msg.channel.guild.id, events: baseData });
+                    } else {
+                        await settingsCollection.updateOne(guild, {
+                            $set: {
+                                events: baseData
                             }
-                        }
-                    });
+                        });
+                    }
                     await msg.edit('Complete.');
                 }
             },
