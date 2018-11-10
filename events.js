@@ -1,9 +1,23 @@
 const spoopy = require('spoopylink');
+const moment = require('moment');
 const urlRegex = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/ig;
 
 module.exports = (bot, loggr, db) => {
-    bot.on('channelCreate', chan => {
+    let replaceVariables = require('./variables');
+    let icon = require('./icons');
+    let settingsCollection = db.collection('settings');
+    bot.on('channelCreate', async chan => {
         loggr.debug('Encountered channelCreate.');
+        let guild = await settingsCollection.findOne({ guildId: chan.guild.id });
+        if (guild) {
+            if (guild.events.channelCreate.enabled && guild.loggingChannel !== '0') {
+                let format = guild.events.channelCreate.format;
+                let logLine = replaceVariables(format, {
+                    time: moment().format('HH:mm:ss'),
+                    icon: icon('channelCreate')
+                });
+            }
+        }
     });
 
     bot.on('channelDelete', chan => {
@@ -56,7 +70,6 @@ module.exports = (bot, loggr, db) => {
 
     bot.on('messageCreate', async message => {
         loggr.debug('Encountered messageCreate.');
-        let settingsCollection = db.collection('settings');
         let guildSettings = await settingsCollection.findOne({ guildId: message.channel.guild.id });
         if (guildSettings) {
             if (guildSettings.events.unsafeLinks) {
@@ -125,7 +138,6 @@ module.exports = (bot, loggr, db) => {
 
     bot.on('guildCreate', async guild => {
         loggr.debug('Encountered guildCreate.');
-        let settingsCollection = db.collection('settings');
         let guildExists = await settingsCollection.findOne({ guildId: guild.id });
         if (!guildExists) {
             await settingsCollection.insertOne({

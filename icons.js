@@ -1,13 +1,9 @@
 module.exports = bot => {
     let icons = {
-        memberJoin: [
-            '<a:ablobjoin:483676111776120852>',
-            ':point_left::door:'
-        ],
-        memberLeave: [
-            '<a:ablobleave:483676112329637891>',
-            ':point_right::door:'
-        ]
+        channelCreate: '<:channelcreate:432986578781077514>',
+        channelDelete: '<:channeldelete:432986579674333215>',
+        memberJoin: '<a:ablobjoin:483676111776120852>',
+        memberLeave: '<a:ablobleave:483676112329637891>'
     }
 
     return (guild, icon) => {
@@ -18,10 +14,10 @@ module.exports = bot => {
             if (member.permission.has('externalEmojis')) {
                 return icons[icon][0];
             } else {
-                return icons[icon][1];
+                return '[External emojis disabled]'
             }
         } else {
-            return null;
+            return '[Internal error]';
         }
     };
 }
